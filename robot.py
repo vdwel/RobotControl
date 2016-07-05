@@ -54,49 +54,53 @@ MYSOUND4      = '1853595354564f4943453300000000'
 MYSOUND5      = '1853595354564f4943453400000000'
 
 class robot:
-  data15 = ''
-  data18 = ''
-  gatt = 1
-  btdev = ''
-  debug15 = False
-  debug18 = False
-  readingData = False
-  leftDistanceSensor = 0
-  rightDistanceSensor = 0
-  rearDistanceSensor = 0
-  button0 = False
-  button1 = False
-  button2 = False
-  button3 = False
-  tilt = 0
-  lean = 0
-  soundLevel = 0
-  clap = False
-  headX = 0
-  headY = 0
-  leftWheel = 0
-  rightWheel = 0
-  zRotationAcceleration = 0
-  deltaZRotationAcceleration = 0
-  zAcceleration = 0 # between -2040 and +2040
-  deltaXRotationAcceleration = 0
-  deltaYRotationAcceleration = 0
-  soundDirection = 0
-  leftSensorSeesDot = False
-  rightSensorSeesDot = False
-  dotWasSeen = False
-  unknown1 = 0
-  WheelDistance = 0
-  sendingCommand = False
-  numberCommandsSending = 0
 
   def __init__(self, btdev):
+    self.initVars()
     self.gatt = pexpect.spawn('gatttool -I -t random -b {0}'.format(btdev))
     time.sleep(1)
     self.gatt.sendline('connect')
     self.gatt.expect('Connection successful')
     self.btdev = btdev
     self.startReadingData()
+
+  def initVars(self):
+    self.data15 = ''
+    self.data18 = ''
+    self.gatt = 1
+    self.btdev = ''
+    self.debug15 = False
+    self.debug18 = False
+    self.readingData = False
+    self.leftDistanceSensor = 0
+    self.rightDistanceSensor = 0
+    self.rearDistanceSensor = 0
+    self.button0 = False
+    self.button1 = False
+    self.button2 = False
+    self.button3 = False
+    self.tilt = 0
+    self.lean = 0
+    self.soundLevel = 0
+    self.clap = False
+    self.headX = 0
+    self.headY = 0
+    self.leftWheel = 0
+    self.rightWheel = 0
+    self.zRotationAcceleration = 0
+    self.deltaZRotationAcceleration = 0
+    self.zAcceleration = 0  # between -2040 and +2040
+    self.deltaXRotationAcceleration = 0
+    self.deltaYRotationAcceleration = 0
+    self.soundDirection = 0
+    self.leftSensorSeesDot = False
+    self.rightSensorSeesDot = False
+    self.dotWasSeen = False
+    self.unknown1 = 0
+    self.WheelDistance = 0
+    self.sendingCommand = False
+    self.numberCommandsSending = 0
+
 
   def sendCommand(self, command, handle='0x0013'):
     if self.numberCommandsSending > 9:
