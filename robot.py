@@ -15,6 +15,8 @@ import thread
 import pexpect
 import os
 import select
+import Adafruit_BluefruitLE
+
 
 # Sounds
 HI            = '1853595354444153485f48495f564f'
@@ -56,15 +58,6 @@ MYSOUND5      = '1853595354564f4943453400000000'
 class robot:
 
   def __init__(self, btdev):
-    self.initVars()
-    self.gatt = pexpect.spawn('gatttool -I -t random -b {0}'.format(btdev))
-    time.sleep(1)
-    self.gatt.sendline('connect')
-    self.gatt.expect('Connection successful')
-    self.btdev = btdev
-    self.startReadingData()
-
-  def initVars(self):
     self.data15 = ''
     self.data18 = ''
     self.gatt = 1
@@ -100,6 +93,14 @@ class robot:
     self.WheelDistance = 0
     self.sendingCommand = False
     self.numberCommandsSending = 0
+    self.robotService = self.btdev.find_service(ROBOT_SERVICE_UUID)
+    self.char0 = self.robotService.find_characteristic(CHAR0_CHAR_UUID)
+    self.char1 = self.robotService.find_characteristic(CHAR1.CHAR_UUID)
+    time.sleep(1)
+    self.gatt.sendline('connect')
+    self.gatt.expect('Connection successful')
+    self.btdev = btdev
+    self.startReadingData()
 
 
   def sendCommand(self, command, handle='0x0013'):
