@@ -319,7 +319,7 @@ def displaySensorData(robot):
     os.system('setterm -cursor on')
 
 
-def getRobotDevice():
+def getRobotDevice(name="DASH"):
     # Clear any cached data because both bluez and CoreBluetooth have issues with
     # caching data and it going stale.
     ble.clear_cached_data()
@@ -330,9 +330,9 @@ def getRobotDevice():
     # Scan for ROBOT devices.
     try:
         self.adapter.start_scan()
-        # Search for the first DFU device found (will time out after 60 seconds
+        # Search for the first robot device found (will time out after 60 seconds
         # but you can specify an optional timeout_sec parameter to change it).
-        device = ble.find_device(service_uuids=[ROBOT_SERVICE_UUID])
+        device = ble.find_device(service_uuids=[ROBOT_SERVICE_UUID], name=name)
         if device is None:
             raise RuntimeError('Failed to find robot device!')
     finally:
