@@ -15,6 +15,7 @@ import os
 import select
 import Adafruit_BluefruitLE
 
+
 # Sounds
 HI = '1853595354444153485f48495f564f'
 HUH = '1853595354435552494f55535f3034'
@@ -52,10 +53,10 @@ MYSOUND3 = '1853595354564f4943453200000000'
 MYSOUND4 = '1853595354564f4943453300000000'
 MYSOUND5 = '1853595354564f4943453400000000'
 
-ROBOT_SERVICE_UUID = uuid.UUID('00001530-1212-EFDE-1523-785FEABCD123')
-COMMAND_CHAR_UUID = uuid.UUID('00001530-1212-EFDE-1523-785FEABCD123')
-SENSOR1_CHAR_UUID = uuid.UUID('00001530-1212-EFDE-1523-785FEABCD123')
-SENSOR2_CHAR_UUID = uuid.UUID('00001530-1212-EFDE-1523-785FEABCD123')
+ROBOT_SERVICE_UUID = uuid.UUID('AF237777-879D-6186-1F49-DECA0E85D9C1')
+COMMAND_CHAR_UUID = uuid.UUID('AF230002-879D-6186-1F49-DECA0E85D9C1')
+SENSOR1_CHAR_UUID = uuid.UUID('AF230006-879D-6186-1F49-DECA0E85D9C1')
+SENSOR2_CHAR_UUID = uuid.UUID('AF230003-879D-6186-1F49-DECA0E85D9C1')
 
 
 class robot:
@@ -63,7 +64,7 @@ class robot:
         self.data15 = ''
         self.data18 = ''
         self.gatt = 1
-        self.btdev = ''
+        self.btdev = btdev
         self.debug15 = False
         self.debug18 = False
         self.readingData = False
@@ -93,7 +94,8 @@ class robot:
         self.dotWasSeen = False
         self.unknown1 = 0
         self.WheelDistance = 0
-        btdev.discover([ROBOT_SERVICE_UUID], [COMMAND_CHAR_UUID, SENSOR1_CHAR_UUID, SENSOR2_CHAR_UUID])
+        self.connect()
+        self.btdev.discover([ROBOT_SERVICE_UUID], [COMMAND_CHAR_UUID, SENSOR1_CHAR_UUID, SENSOR2_CHAR_UUID])
         self.robotService = btdev.find_service(ROBOT_SERVICE_UUID)
         self.commandChar = self.robotService.find_characteristic(COMMAND_CHAR_UUID)
         self.SensorChar1 = self.robotService.find_characteristic(SENSOR1_CHAR_UUID)
@@ -105,10 +107,10 @@ class robot:
         self.commandChar.write_value(command.decode('hex'))
 
     def disconnect(self):
-        btdev.disconnect()
+        self.btdev.disconnect()
 
     def connect(self):
-        btdev.connect()
+        self.btdev.connect()
 
     def reset(self):
         self.sendCommand('C804')  # reset robot
@@ -214,8 +216,8 @@ class robot:
         self.sendCommand('08{0}09{1}'.format("%0.2X" % intensity, "%0.4X" % eye))
 
     def startReadingData(self):
-        SensorChar1.start_notify(self.updateSensorData1)
-        SensorChar2.start_notify(self.updateSensorData2)
+        self.SensorChar1.start_notify(self.updateSensorData1)
+        self.SensorChar2.start_notify(self.updateSensorData2)
 
     def updateSensorData1(self, data):
         dataString = data.encode('hex')
@@ -286,7 +288,7 @@ class robot:
 
 def displaySensorData(robot):
     os.system('clear')
-    os.system('setterm -cursor off')
+    #os.system('setterm -cursor off')
     while not (sys.stdin in select.select([sys.stdin], [], [], 0)[0]):
         print("\033[" + str(0) + ";" + str(0) + "f")
         print 'left distance sensor     : {0}          '.format(robot.leftDistanceSensor)
@@ -319,7 +321,7 @@ def displaySensorData(robot):
     os.system('setterm -cursor on')
 
 
-def getRobotDevice(name="DASH"):
+def getRobotDevice(name="Dash"):
     # Clear any cached data because both bluez and CoreBluetooth have issues with
     # caching data and it going stale.
     ble.clear_cached_data()
@@ -329,12 +331,14 @@ def getRobotDevice(name="DASH"):
     adapter.power_on()
     # Scan for ROBOT devices.
     try:
-        self.adapter.start_scan()
+        adapter.start_scan()
         # Search for the first robot device found (will time out after 60 seconds
         # but you can specify an optional timeout_sec parameter to change it).
         device = ble.find_device(service_uuids=[ROBOT_SERVICE_UUID], name=name)
         if device is None:
             raise RuntimeError('Failed to find robot device!')
+        else:
+            print "Connected to ", name
     finally:
         # Make sure scanning is stopped before exiting.
         adapter.stop_scan()
