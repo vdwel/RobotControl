@@ -90,6 +90,7 @@ Available sensordata:
 * leftSensorSeesDot (bool)
 * rightSensorSeesDot (bool)
 * unknown1 (int)
+* robotSerial (string)
 
 Sounds:
 * HI
