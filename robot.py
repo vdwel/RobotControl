@@ -193,8 +193,8 @@ class robot:
 
     def colorAll(self, redFront, greenFront, blueFront, redLeft, greenLeft, blueLeft, redRight, greenRight, blueRight):
         self.sendCommand(
-            '03{0}{1}{2}0b{3}{4}{5}0c{6}{7}{8}'.format("%0.2X" % redFront, "%0.2X" % greenFront, "%0.2X" % blueFront, \
-                                                       "%0.2X" % redLeft, "%0.2X" % greenLeft, "%0.2X" % blueLeft, \
+            '03{0}{1}{2}0b{3}{4}{5}0c{6}{7}{8}'.format("%0.2X" % redFront, "%0.2X" % greenFront, "%0.2X" % blueFront,
+                                                       "%0.2X" % redLeft, "%0.2X" % greenLeft, "%0.2X" % blueLeft,
                                                        "%0.2X" % redRight, "%0.2X" % greenRight, "%0.2X" % blueRight))
 
     def topLight(self, on=True):
@@ -275,8 +275,8 @@ class robot:
             self.dotWasSeen = False
 
     def stopReadingData(self):
-        SensorChar1.stop_notify()
-        SensorChar2.stop_notify()
+        self.SensorChar1.stop_notify()
+        self.SensorChar2.stop_notify()
 
 
 def displaySensorData(robot):
