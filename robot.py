@@ -1,12 +1,10 @@
-# Robot control! Control With Bluez
+# Robot control
 # Author: vdwel
 #
 # This script provides a library for controling dash and dot
 #
 # Dependencies:
-# - You must install the pexpect library, typically with 'sudo pip install pexpect'.
-# - You must have bluez installed and gatttool in your path (copy it from the
-#   attrib directory after building bluez into the /usr/bin/ location).
+# - You must install the "Adafruit_Python_BluefruitLE"-library first
 #
 # License: Released under an MIT license: http://opensource.org/licenses/MIT
 import sys
@@ -52,6 +50,7 @@ MYSOUND2 = '1853595354564f4943453100000000'
 MYSOUND3 = '1853595354564f4943453200000000'
 MYSOUND4 = '1853595354564f4943453300000000'
 MYSOUND5 = '1853595354564f4943453400000000'
+MYSOUND6 = '1853595354564f4943453500000000'
 
 ROBOT_SERVICE_UUID = uuid.UUID('AF237777-879D-6186-1F49-DECA0E85D9C1')
 COMMAND_CHAR_UUID = uuid.UUID('AF230002-879D-6186-1F49-DECA0E85D9C1')
@@ -61,12 +60,7 @@ SENSOR2_CHAR_UUID = uuid.UUID('AF230003-879D-6186-1F49-DECA0E85D9C1')
 
 class robot:
     def __init__(self, btdev):
-        self.data15 = ''
-        self.data18 = ''
-        self.gatt = 1
         self.btdev = btdev
-        self.debug15 = False
-        self.debug18 = False
         self.readingData = False
         self.leftDistanceSensor = 0
         self.rightDistanceSensor = 0
@@ -103,7 +97,6 @@ class robot:
         self.startReadingData()
 
     def sendCommand(self, command):
-        # print('sending command: {0} {1}'.format(handle, command)) #enable this line for debugging commands
         self.commandChar.write_value(command.decode('hex'))
 
     def disconnect(self):
