@@ -12,6 +12,7 @@ import uuid
 import os
 import select
 import Adafruit_BluefruitLE
+import time
 
 
 # Sounds
@@ -57,19 +58,22 @@ MYSOUND9 = '1853595354564f4943453800000000'
 MYSOUND10 = '1853595354564f4943453900000000'
 
 ROBOT_SERVICE_UUID = uuid.UUID('AF237777-879D-6186-1F49-DECA0E85D9C1')
-COMMAND_CHAR_UUID = uuid.UUID('AF230002-879D-6186-1F49-DECA0E85D9C1')
+COMMAND1_CHAR_UUID = uuid.UUID('AF230002-879D-6186-1F49-DECA0E85D9C1')
 SENSOR1_CHAR_UUID = uuid.UUID('AF230006-879D-6186-1F49-DECA0E85D9C1')
 SENSOR2_CHAR_UUID = uuid.UUID('AF230003-879D-6186-1F49-DECA0E85D9C1')
+COMMAND2_CHAR_UUID = uuid.UUID('AF230000-879D-6186-1F49-DECA0E85D9C1')
+INFO_CHAR_UUID = uuid.UUID('AF230001-879D-6186-1F49-DECA0E85D9C1')
 
 
 class robot:
     def __init__(self, btdev):
         self.btdev = btdev
+        self.robotSerial = "unknown"
         self.readingData = False
         self.leftDistanceSensor = 0
         self.rightDistanceSensor = 0
         self.rearDistanceSensor = 0
-        self.button0 = False
+        self.button0 = True
         self.button1 = False
         self.button2 = False
         self.button3 = False
@@ -93,15 +97,25 @@ class robot:
         self.unknown1 = 0
         self.WheelDistance = 0
         self.connect()
-        self.btdev.discover([ROBOT_SERVICE_UUID], [COMMAND_CHAR_UUID, SENSOR1_CHAR_UUID, SENSOR2_CHAR_UUID])
+        self.btdev.discover([ROBOT_SERVICE_UUID], [COMMAND1_CHAR_UUID, SENSOR1_CHAR_UUID, SENSOR2_CHAR_UUID])
         self.robotService = btdev.find_service(ROBOT_SERVICE_UUID)
-        self.commandChar = self.robotService.find_characteristic(COMMAND_CHAR_UUID)
+        self.commandChar1 = self.robotService.find_characteristic(COMMAND1_CHAR_UUID)
+        self.commandChar2 = self.robotService.find_characteristic(COMMAND2_CHAR_UUID)
         self.SensorChar1 = self.robotService.find_characteristic(SENSOR1_CHAR_UUID)
         self.SensorChar2 = self.robotService.find_characteristic(SENSOR2_CHAR_UUID)
+        self.InfoChar = self.robotService.find_characteristic(INFO_CHAR_UUID)
+
         self.startReadingData()
+        ##Wait for robot te become active
+        while self.button0:
+            pass
+        #Get robot Serial
+        self.commandChar2.write_value('c84120534e204745540a'.decode('hex'))
+        while self.robotSerial == "unknown":
+            pass
 
     def sendCommand(self, command):
-        self.commandChar.write_value(command.decode('hex'))
+        self.commandChar1.write_value(command.decode('hex'))
 
     def disconnect(self):
         self.btdev.disconnect()
@@ -215,6 +229,11 @@ class robot:
     def startReadingData(self):
         self.SensorChar1.start_notify(self.updateSensorData1)
         self.SensorChar2.start_notify(self.updateSensorData2)
+        self.InfoChar.start_notify(self.updateInfo)
+
+    def updateInfo(self, data):
+        self.robotSerial = data
+        print "Robot Serial number: " + self.robotSerial
 
     def updateSensorData1(self, data):
         dataString = data.encode('hex')
