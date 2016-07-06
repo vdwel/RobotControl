@@ -3,13 +3,10 @@
 
 from robot import *
 
-btDash = "d4:75:30:ab:02:56"
-btDot = "D0:C5:55:9F:C5:C4"
+def main():
+    dash = robot(getRobotDevice())
+    # Show sensor data
+    displaySensorData(dash)
+    dash.disconnect()
 
-dash = robot(btDash)
-dash.reset()
-
-# Show sensor data
-displaySensorData(dash)
-
-dash.disconnect()
+ble.run_mainloop_with(main)

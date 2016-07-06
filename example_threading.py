@@ -1,15 +1,8 @@
-# Example robot control change btDash and btDot into the values for your robot
-# find the bluetooth adress of your robot with the command: hcitool lescan
-
 # Dash will drive around, trying to avoid obstacles while constantly turning his head
 
 from robot import *
-
-btDash = "d4:75:30:ab:02:56" # change these to your robots bt addres
-btDot = "D0:C5:55:9F:C5:C4"
-
-dash = robot(btDash)
-dash.reset()
+import time
+import thread
 
 running = False
 
@@ -68,7 +61,12 @@ def Disco():
         	blue -= blueStep
         	blueStep = -blueStep
         dash.colorAll(red, green, blue, red, green, blue, red, green, blue)
-        
-print("Press {enter} to stop demo")
-example()
-dash.disconnect()
+
+def main():
+    global dash
+    dash = robot(getRobotDevice())
+    print("Press {enter} to stop demo")
+    example()
+    dash.disconnect()
+
+ble.run_mainloop_with(main)

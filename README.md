@@ -1,5 +1,5 @@
 # RobotControl
-A simple python library to control Dash and Dot robots from Wonder Workshop.
+A simple python library to control Dash and Dot robots from Wonder Workshop. It works on OSX and on Linux
 
 This python library has been developed by using the AdaFruit BlueFruit LE sniffer to capture communication between the iPad and the Robots.
 
@@ -7,24 +7,35 @@ It might contain errors or might not work anymore in future release of the robot
 
 Using this library is at your own risk.
 
+Dependencies:
+- You must install the "Adafruit_Python_BluefruitLE"-library first (you can find it on github)
+- Your system should support bluetooth LE
+
 Usage:
 from robot import *
 
-Create a robot object like:
-dash = robot('bluetooth adress from your robot')
-
-Execute commands to the robot like:
+Create a main function like this:
+````
+def main():
+    global myRobot
+    myRobot = robot(getRobotDevice("Dot" or "Dash"))
+    your_robot_control_function()
+    myRobot.disconnect()
+````
+and then start the main function with the following command:
+````
+ble.run_mainloop_with(main)
+````
+In your robot control function, you can execute commands on the robot like:
 dash.command(arg1, arg2, arg..)
 
 For debugging, show all sensor data with the command:
-displaySensorData(robot) #where robot is your robot object
+displaySensorData(myRobot) #where robot is your robot object (see example)
 
 Read sensor data like:
-value = dash.sensor
+value = myRobot.sensor
 
-When finished use the command: dash.disconnect()
-Otherwise the gatttool keeps running in the background and you might not be able to connect anymore.
-If this happens you kan kill the gatttool with the commandline: killall gatttool
+When finished use the command: myRobot.disconnect()
 
 Supported commands:
 * connect()
@@ -116,3 +127,8 @@ Sounds:
 * MYSOUND3
 * MYSOUND4
 * MYSOUND5
+* MYSOUND6
+* MYSOUND7
+* MYSOUND8
+* MYSOUND9
+* MYSOUND10
