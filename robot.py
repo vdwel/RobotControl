@@ -357,7 +357,7 @@ def getRobotDevice(name="Dash"):
     finally:
         # Make sure scanning is stopped before exiting.
         adapter.stop_scan()
-        device.connect()
+    device.connect()
     return device
 
 
