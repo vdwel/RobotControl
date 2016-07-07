@@ -4,3 +4,5 @@
 *.xml
 
 *.iml
+
+example_test.py
