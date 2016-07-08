@@ -361,14 +361,16 @@ def getRobotDevice(name="Dash"):
             # Unsupported platform
             raise RuntimeError('Sorry the {0} platform is not supported.'.format(sys.platform))
 
+
         if device is None:
             raise RuntimeError('Failed to find robot device!')
         else:
-            print "Connected to ", name
+            print "Found robot."
     finally:
         # Make sure scanning is stopped before exiting.
         adapter.stop_scan()
     device.connect()
+    print "Connected!"
     return device
 
 
