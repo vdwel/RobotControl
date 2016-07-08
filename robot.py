@@ -96,7 +96,7 @@ class robot:
         self.dotWasSeen = False
         self.unknown1 = 0
         self.WheelDistance = 0
-        self.btdev.discover([ROBOT_SERVICE_UUID], [COMMAND1_CHAR_UUID, SENSOR1_CHAR_UUID, SENSOR2_CHAR_UUID])
+        self.btdev.discover([ROBOT_SERVICE_UUID], [COMMAND1_CHAR_UUID, COMMAND2_CHAR_UUID,  SENSOR1_CHAR_UUID, SENSOR2_CHAR_UUID, INFO_CHAR_UUID])
         self.robotService = btdev.find_service(ROBOT_SERVICE_UUID)
         self.commandChar1 = self.robotService.find_characteristic(COMMAND1_CHAR_UUID)
         self.commandChar2 = self.robotService.find_characteristic(COMMAND2_CHAR_UUID)
@@ -359,7 +359,7 @@ def getRobotDevice(name="Dash"):
         else:
             # Unsupported platform
             raise RuntimeError('Sorry the {0} platform is not supported.'.format(sys.platform))
-        
+
         if device is None:
             raise RuntimeError('Failed to find robot device!')
         else:
