@@ -106,6 +106,7 @@ class robot:
 
         self.startReadingData()
         ##Wait for robot te become active
+        print "Waiting for robot to become active..."
         while self.button0:
             pass
         #Get robot Serial
