@@ -96,6 +96,7 @@ class robot:
         self.dotWasSeen = False
         self.unknown1 = 0
         self.WheelDistance = 0
+        print "Connecting to robot Characteristics."
         self.btdev.discover([ROBOT_SERVICE_UUID], [COMMAND1_CHAR_UUID, COMMAND2_CHAR_UUID,  SENSOR1_CHAR_UUID, SENSOR2_CHAR_UUID, INFO_CHAR_UUID])
         self.robotService = btdev.find_service(ROBOT_SERVICE_UUID)
         self.commandChar1 = self.robotService.find_characteristic(COMMAND1_CHAR_UUID)
