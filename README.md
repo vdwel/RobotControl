@@ -1,5 +1,5 @@
 # RobotControl
-A simple python library to control Dash and Dot robots from Wonder Workshop. It works on OSX and on Linux
+A simple python library to control Dash and Dot robots from Wonder Workshop. It works on OSX and on Linux (on Linux it is not very stable yet)
 
 This python library has been developed by using the AdaFruit BlueFruit LE sniffer to capture communication between the iPad and the Robots.
 
