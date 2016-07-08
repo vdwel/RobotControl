@@ -8,7 +8,7 @@ It might contain errors or might not work anymore in future release of the robot
 Using this library is at your own risk.
 
 Dependencies:
-- You must install the "Adafruit_Python_BluefruitLE"-library first (you can find it on github)
+- You must install the "Adafruit_Python_BluefruitLE"-library first (you can find it on github), use it with the Bluez version as described by the Readme from Adafruit
 - Your system should support bluetooth LE
 
 Usage:
