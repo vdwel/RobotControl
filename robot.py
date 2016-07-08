@@ -349,7 +349,17 @@ def getRobotDevice(name="Dash"):
         adapter.start_scan()
         # Search for the first robot device found (will time out after 60 seconds
         # but you can specify an optional timeout_sec parameter to change it).
-        device = ble.find_device(service_uuids=[ROBOT_SERVICE_UUID], name=name)
+
+        if sys.platform == 'linux2':
+            # Connecting by name is NOT working on Linux
+            device = ble.find_device(service_uuids=[ROBOT_SERVICE_UUID])
+        elif sys.platform == 'darwin':
+            # Connecting by name is working on OSX
+            device = ble.find_device(service_uuids=[ROBOT_SERVICE_UUID], name=name)
+        else:
+            # Unsupported platform
+            raise RuntimeError('Sorry the {0} platform is not supported.'.format(sys.platform))
+        
         if device is None:
             raise RuntimeError('Failed to find robot device!')
         else:
